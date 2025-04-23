@@ -1,0 +1,97 @@
+'''import speech_recognition as sr
+import pyttsx3
+import webbrowser
+import music_library
+import requests
+from openai import OpenAI
+
+# Initialize the recognizer and text-to-speech engine
+Recognizer = sr.Recognizer()
+engine = pyttsx3.init()
+newsapi = "e0e3e18e6c434bbb90de6927c2ae541d"
+
+# Function to make the program speak
+def speak(text):
+    engine.say(text)
+    engine.runAndWait()
+
+def aiprocess(command):
+ client = OpenAI(
+    api_key="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",
+)
+
+# Call ChatCompletion with the new client interface
+response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": command}
+    ]
+)
+  return response.choices[0].message.content
+
+
+def processcommand(c):
+    if "open google" in c.lower():
+        webbrowser.open("https://google.com")
+    elif "open facebook" in c.lower():
+        webbrowser.open("https://facebook.com")
+    elif "open github" in c.lower():
+        webbrowser.open("https://github.com")
+    elif "open youtube" in c.lower():
+        webbrowser.open("https://youtube.com")
+    elif c.lower().startswith("play"):
+        song = c.lower().split(" ")[1]
+        link = music_library.music[song]
+        webbrowser.open(link)
+    elif "news" in c.lower():
+       r = requests.get(f"https://newsapi.org/v2/top-headlines?country=in&apiKey={newsapi}")
+       if r.status_code == 200:
+            data = r.json()
+            article = data.get('articles', [])
+            for article in articles:
+                speak(article['title'])
+    else:
+        #let open ai handle the request
+        output = aiprocess(c)
+        speak(output)
+       
+
+
+if __name__ == "__main__":
+    speak("hello how may i help you")
+
+    while True:
+        # Listen for speech and recognize it
+        with sr.Microphone() as source:
+            print("LISTENING...")
+            audio = Recognizer.listen(source, timeout=20, phrase_time_limit=1)
+            print("recognizing")
+
+        # Recognize speech using Sphinx (or Google if you prefer)
+        try:
+            with sr.Microphone() as source:
+              print("LISTENING...")
+            audio = Recognizer.listen(source, timeout=20, phrase_time_limit=1)
+            command = Recognizer.recognize_google(audio)
+            if(command.lower() == "hello" or "hii"):
+                speak("hii,if any problem let me know")
+                # 5tlisten for command
+                with sr.Microphone() as source:
+                    print("ready to work..")
+                    audio = Recognizer.listen(source)
+                    command = Recognizer.recognize_google(audio)
+
+                    processcommand(command)
+            
+        except sr.RequestError as e:
+            print(f"Sphinx error; {e}") 
+            
+            
+            
+            
+            
+            
+            
+            
+'''
